@@ -2,20 +2,31 @@ import React from "react";
 import Joi from "joi-browser";
 import Form from "./common/form";
 
+import { login } from "../services/loginService";
+
 class LoginForm extends Form {
   state = {
-    data: { username: "", password: "" },
+    data: { email: "", password: "" },
     errors: {},
   };
 
   schema = {
-    username: Joi.string().required().label("Username"),
+    email: Joi.string().required().label("Email"),
     password: Joi.string().required().label("Password"),
   };
 
-  doSubmit = () => {
-    //calling the server
-    console.log("Submitted");
+  doSubmit = async () => {
+    try {
+      const { email, password } = this.state.data;
+      await login(email, password);
+      window.location = "/";
+    } catch (error) {
+      if (error.response && error.response.status === 400) {
+        const errors = { ...this.state.errors };
+        errors.email = error.response.data;
+        this.setState({ errors });
+      }
+    }
   };
 
   render() {
@@ -23,7 +34,7 @@ class LoginForm extends Form {
       <div>
         <h1>Login</h1>
         <form onSubmit={this.handleSubmit}>
-          {this.renderInput("username", "Username")}
+          {this.renderInput("email", "Email")}
           {this.renderInput("password", "Password", "password")}
           {this.renderButton("Login")}
         </form>
