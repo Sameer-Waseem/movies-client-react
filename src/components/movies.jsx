@@ -28,7 +28,7 @@ class Movies extends React.Component {
 
   async componentDidMount() {
     const { data } = await getGenres();
-    const genres = [{ id: "", name: "All Genres" }, ...data];
+    const genres = [{ _id: "", name: "All Genres" }, ...data];
     const { data: movies } = await getMovies();
 
     this.setState({ movies, genres });
@@ -103,6 +103,7 @@ class Movies extends React.Component {
   };
 
   render() {
+    const { user } = this.props;
     const { length: count } = this.state.movies;
     const { pageSize, currentPage, searchQuery, sortColumn } = this.state;
 
@@ -120,14 +121,16 @@ class Movies extends React.Component {
           ></ListGroup>
         </div>
         <div className="col">
-          <Link to="/movies/new">
-            <button
-              style={{ marginBottom: "20px" }}
-              className="btn btn-primary"
-            >
-              New Movies
-            </button>
-          </Link>
+          {user && (
+            <Link to="/movies/new">
+              <button
+                style={{ marginBottom: "20px" }}
+                className="btn btn-primary"
+              >
+                New Movies
+              </button>
+            </Link>
+          )}
           <p>There are {totalCount} movies in the Database</p>
           <SearchBox
             value={searchQuery}
