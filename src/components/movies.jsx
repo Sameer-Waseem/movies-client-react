@@ -107,7 +107,24 @@ class Movies extends React.Component {
     const { length: count } = this.state.movies;
     const { pageSize, currentPage, searchQuery, sortColumn } = this.state;
 
-    if (!count) return <p>There are no movies in the Database!</p>;
+    if (!count) {
+      return(
+        <div className="col">
+          {user && (
+            <Link to="/movies/new">
+              <button
+                style={{ marginBottom: "20px" }}
+                className="btn btn-primary"
+              >
+                New Movies
+              </button>
+            </Link>
+          )}
+  
+          <p>There are no movies in the Database!</p>
+        </div>  
+      )
+    }
 
     const { totalCount, data: movies } = this.getPageData();
 
